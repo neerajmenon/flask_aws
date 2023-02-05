@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+	<body>
+        
+		<h1>Welcome, {{username}}. You are logged in</h1>
+
+		<a href="{{url_for('login')}}">Logout</a>
+{% with messages = get_flashed_messages() %}
+  {% if messages %}
+    <ul class=flashes>
+    {% for message in messages %}
+      <li>{{ message }}</li>
+    {% endfor %}
+    </ul>
+  {% endif %}
+{% endwith %}
+		
+        {% block body %}
+                <p><strong>email:</strong> {{email}}
+                    <p><strong>first name:</strong> {{fname}}
+                        <p><strong>last name:</strong> {{lname}}
+        {% endblock %}
+	    
+	</body>
+</html>
+
+
