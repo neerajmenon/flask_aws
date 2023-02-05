@@ -1,5 +1,5 @@
 from flask import Flask,redirect,url_for,render_template,request,flash,send_file
-import sqlite3
+import sqlite3, json
 
 
 app = Flask(__name__)
@@ -18,7 +18,7 @@ def dashboard():
   f_fname = None
   f_lname = None
   wcount = None
-  return render_template('dashboard.html',username=f_name,password=f_pswd,email=f_email,fname=f_fname,lname=f_lname,wcount=wcount)
+  return render_template('dashboard.html',data=json.loads(request.args['data']))
 
 def count_words(filename):
   number_of_words = 0
@@ -61,7 +61,12 @@ def login():
           if f_pswd == password:
             flash('You were successfully logged in!')
             wcount = count_words('Limerick.txt')
-            return render_template('dashboard.html',username=f_name,password=f_pswd,email=f_email,fname=f_fname,lname=f_lname,wcount=wcount)
+            data = json.dumps({'username':f_name,
+                               'email':f_email,
+                               'fname':f_fname,
+                               'lname':f_lname,
+                               'wcount':wcount})
+            return redirect(url_for('dashboard',data=data))
           else:
             flash("Incorrect password")
         else:

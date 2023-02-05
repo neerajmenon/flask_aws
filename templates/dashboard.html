@@ -2,7 +2,7 @@
 <html>
 	<body>
         
-		<h1>Welcome, {{username}}. You are logged in</h1>
+		<h1>Welcome, {{data.username}}. You are logged in</h1>
 
 		<a href="{{url_for('login')}}">Logout</a>
 {% with messages = get_flashed_messages() %}
@@ -16,10 +16,10 @@
 {% endwith %}
 		
         {% block body %}
-                <p><strong>email:</strong> {{email}}
-                    <p><strong>first name:</strong> {{fname}}
-                        <p><strong>last name:</strong> {{lname}}
-                <p><strong>Number of words in file</strong> {{wcount}}
+                <p><strong>email:</strong> {{data.email}}
+                    <p><strong>first name:</strong> {{data.fname}}
+                        <p><strong>last name:</strong> {{data.lname}}
+                <p><strong>Number of words in file</strong> {{data.wcount}}
                 <br><a href="{{url_for('download')}}">Download the file</a>
         {% endblock %}
 	    
