@@ -3,6 +3,7 @@ import sqlite3
 
 
 app = Flask(__name__)
+app.config['SECRET_KEY'] = "thisisasecret"
 
 
 @app.route('/')
@@ -27,9 +28,10 @@ def register():
         email = request.form['email']
         firstname = request.form['firstname']
         lastname = request.form['lastname']
-        
-        #cursor.execute("INSERT INTO users VALUES('"+name+"','"+password+"','"+email+"','"+firstname+"','"+lastname+"')")
-        #connection.commit()
+        command = "INSERT INTO users VALUES('"+name+"','"+password+"','"+email+"','"+firstname+"','"+lastname+"')"
+        print(command)
+        cursor.execute(command)
+        connection.commit()
 
     return render_template('register.html')
 
