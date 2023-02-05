@@ -1,24 +1,30 @@
-from flask import Flask,redirect,url_for,render_template,request,flash,send_file
+from flask import Flask,redirect,url_for,render_template,request,flash,send_file,session
 import sqlite3, json
 
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = "thisisasecret"
+app.config['SECRET_KEY'] = "thisisasecret!!!!"
 
+
+@app.route("/logout")
+def logout():
+    session.clear()
+    return redirect(url_for("login"))
 
 @app.route('/')
 def hello_world():
   return render_template('home.html')
 
+
 @app.route('/dashboard')
 def dashboard():
-  f_name = None
-  f_pswd = None
-  f_email = None
-  f_fname = None
-  f_lname = None
-  wcount = None
-  return render_template('dashboard.html',data=json.loads(request.args['data']))
+  if "username" not in session:
+    return redirect(url_for("login"))
+  data = json.dumps({})
+  if 'data' in request.args:
+    data = request.args['data']
+  
+  return render_template('dashboard.html',data=json.loads(data))
 
 def count_words(filename):
   number_of_words = 0
@@ -60,6 +66,7 @@ def login():
         if f_name == name:
           if f_pswd == password:
             flash('You were successfully logged in!')
+            session['username'] = f_name
             wcount = count_words('Limerick.txt')
             data = json.dumps({'username':f_name,
                                'email':f_email,

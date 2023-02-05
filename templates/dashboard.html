@@ -4,7 +4,7 @@
         
 		<h1>Welcome, {{data.username}}. You are logged in</h1>
 
-		<a href="{{url_for('login')}}">Logout</a>
+		<a href="{{url_for('logout')}}">Logout</a>
 {% with messages = get_flashed_messages() %}
   {% if messages %}
     <ul class=flashes>
