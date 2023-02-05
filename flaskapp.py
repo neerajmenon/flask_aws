@@ -1,4 +1,4 @@
-from flask import Flask,redirect,url_for,render_template,request,flash
+from flask import Flask,redirect,url_for,render_template,request,flash,send_file
 import sqlite3
 
 
@@ -9,6 +9,28 @@ app.config['SECRET_KEY'] = "thisisasecret"
 @app.route('/')
 def hello_world():
   return render_template('home.html')
+
+@app.route('/dashboard')
+def dashboard():
+  f_name = None
+  f_pswd = None
+  f_email = None
+  f_fname = None
+  f_lname = None
+  wcount = None
+  return render_template('dashboard.html',username=f_name,password=f_pswd,email=f_email,fname=f_fname,lname=f_lname,wcount=wcount)
+
+def count_words(filename):
+  number_of_words = 0
+  with open(filename,'r') as file:
+    data = file.read()
+    lines = data.split()
+    number_of_words += len(lines)
+    return number_of_words
+  
+@app.route('/download')
+def download():
+  return send_file("Limerick.txt",as_attachment=True)
 
 
 @app.route('/login',methods=['GET','POST'])
@@ -38,7 +60,8 @@ def login():
         if f_name == name:
           if f_pswd == password:
             flash('You were successfully logged in!')
-            return render_template('dashboard.html',username=f_name,password=f_pswd,email=f_email,fname=f_fname,lname=f_lname)
+            wcount = count_words('Limerick.txt')
+            return render_template('dashboard.html',username=f_name,password=f_pswd,email=f_email,fname=f_fname,lname=f_lname,wcount=wcount)
           else:
             flash("Incorrect password")
         else:
@@ -65,7 +88,14 @@ def register():
         print(command)
         cursor.execute(command)
         connection.commit()
-        return render_template('login.html')
+        uploaded_file = request.files['file']
+        print(uploaded_file)
+        if uploaded_file.filename != '':
+          uploaded_file.save(uploaded_file.filename)
+        
+        
+        
+        return redirect(url_for('login'))
 
     return render_template('register.html')
 
